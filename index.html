@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<!-- saved from url=(0052)https://yasmim2003.github.io/tela_cadastro_empresa/# -->
+<html lang="pt-BR"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="./cadastro_files/style.css">
+    <link rel="stylesheet" href="./cadastro_files/midia.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <link href="./cadastro_files/css2" rel="stylesheet">
+    <title>cadastro</title>
+</head>
+
+<body class="container">
+    <div class="cadastro">
+        <img class="img_logo" src="./cadastro_files/Logo.png" alt="logo-biotech">
+        <div clas="texto_sobre">
+            <p class="texto_sobre_form">
+                Preencha o formulário abaixo que em breve entraremos em contato
+            </p>
+        </div>
+        <div class="preencher_cadastro">
+            <div class="forms">
+                <form class="input_forms" action="/" method="POST">
+                    <input class="input" id="nome" type="text" name="nome" placeholder="Nome completo" required="">
+
+                    <input class="input" id="email" type="email" name="email" placeholder="E-mail" required="">
+
+                    <input class="input" id="senha" type="password" name="password" placeholder="Senha" required="">
+
+                    <div class="cont_esp">
+                        <label class="opcoes" for="especialidade">Especialiade</label>
+                        <select name="especialidade" id="especialidade">
+                            <option value="">Selecione</option>
+                            <option value="dentista">Dentista</option>
+                            <option value="psicologo">Psicologo</option>
+                            <option value="dermatologista">Dermatologista</option>
+                            <option value="oftalmologista">Oftamologista</option>
+                        </select>
+                    </div>
+                    <div class="cont_medicos">
+                        <label class="opcoes" for="medicos">Quantos Médicos a clínica possui?</label>
+                        <select name="medicos" id="medicos">
+                            <option value="">Selecione</option>
+                            <option value="0-2">0-2</option>
+                            <option value="3-5">3-5</option>
+                            <option value="6-10">6-10</option>
+                            <option value="10+">10+</option>
+                        </select>
+                    </div>
+                    <div class="cont_planos">
+                        <label class="opcoes" for="medicos">Plano desejado</label>
+                        <select name="plano" id="plano">
+                            <option value="">Selecione</option>
+                            <option value="gratis">Gratis</option>
+                            <option value="iniciante">Iniciante</option>
+                            <option value="pro">Pro</option>
+                            <option value="premium">Premium</option>
+                            <option value="custom">Monte seu plano</option>
+                        </select>
+                    </div>
+
+                    <input class="input" id="soma" type="number" name="soma" placeholder="12 + 6 = ?" required="18">
+                    <div class="check_box">
+                        <div>
+                          <input class="input" id="check" type="checkbox" name="check" value="1">
+                        </div>
+                        <label class="texto_check" for="check">Concordo em receber novidades via email.</label>
+                      </div>
+                    <div class="botao">
+                        <button id="submit-btn" type="submit">Enviar</button>
+                    </div>
+                </form>
+                <script>
+                    const somaInput = document.getElementById('soma');
+                    const submitBtn = document.getElementById('submit-btn');
+        
+                    somaInput.addEventListener('input', () => {
+                        const somaValue = Number(somaInput.value);
+                        if (somaValue === 18) {
+                        submitBtn.removeAttribute('disabled');
+                        } else {
+                        submitBtn.setAttribute('disabled', true);
+                        }
+                    });
+                </script>
+            </div>
+
+        </div>
+
+    </div>
+    <div class="texto_otimize">
+        <h4 class="titulo_otimize">Otimize seus atendimentos</h4>
+        <p class="texto">Lorem ipsum, dolor sit amet consectetur adipisicing elit. Placeat eveniet architecto alias ut
+            obcaecati quia
+            eos sapiente accusantium culpa quo id rerum vel nostrum, iste odio quis totam minima! Dolor!</p>
+    </div>
+    <div class="modal">
+        <div class="conteudo-modal">
+            <div>
+                <span class="fechar-modal">X</span>
+            </div>
+            <div class="informacoes-modal">
+                <img src="./cadastro_files/check-img.png" alt="check imagem">
+                <h4>Solicitação enviada com sucesso</h4>
+            </div>
+        </div>
+    </div>
+
+
+</body></html>

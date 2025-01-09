@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Financial Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com/">
+  <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../assets/fin_dashboard.css">
+  <!-- Add the Chart.js library to your EJS template -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+</head>
+<body>
+  <div style="align-items: left;">
+    <h1 style="color: black; margin-left: 7%; margin-bottom: 0px; margin-top: 50px;" align="left">Gestão Financeira</h1>
+    <hr style="margin-left: 7%; width: 50%;">
+</div>
+  <div class="container">
+     <!--
+    <h1>Welcome, <%= email %></h1>
+
+    <div>
+      <h2>Total Paid for Clients: <%= totalValorLiq %></h2>
+    </div> -->
+
+    <!-- First row -->
+    <div class="chart-row">
+      <!-- Card for annual medium balance -->
+      <div class="card anualCard">
+        <h2>Balanço Médio Anual</h2>
+        <h3>R$<%= (Math.round(annualMediumBalance * 100) / 100).toFixed(2) %></h3> <!-- Replace with actual data -->
+      </div>
+
+      <!-- Chart container -->
+      <div class="chart-container">
+        <!-- Create a canvas element to render the pie chart -->
+        <canvas id="pieChart"></canvas>
+      </div>
+
+      <div class="chart-container">
+        <!-- Create a canvas element to render the half-doughnut chart -->
+        <canvas id="halfDoughnutChart"></canvas>
+      </div>
+    </div>
+
+    <!-- Second row -->
+    <div class="card-row">
+      <!-- Card for revenue -->
+      <div class="card ftCard">
+        <h2>Lucro</h2>
+        <p><strong>R$<%= (Math.round(revenue * 100) / 100).toFixed(2) %></strong></p> <!-- Replace with actual data -->
+      </div>
+
+      <!-- Card for the number of consultations in the last three months -->
+      <div class="card ftCard ">
+        <h2>N.º de Consultas nos Últimos 3 Meses</h2>
+        <p><strong><%= numberOfConsultations %></strong></p> <!-- Replace with actual data -->
+      </div>
+    </div>
+
+      <!-- Card for annual medium balance -->
+      <div class="card-row2">
+      <div class="card mensal">
+        <h2>Balanço Mensal</h2>
+        <p><strong>R$<%= (Math.round(currentMonthRevenue * 100) / 100).toFixed(2) %></strong></p> <!-- Replace with actual data -->
+      </div>
+    
+      <div class="card plano">
+        <h4>Convênio mais<br>utilizado</h4>
+        <p><%= mostUsedPlano %></p> <!-- Replace with actual data -->
+      </div>
+     </div>
+    </div>
+
+    <!-- JavaScript to create the pie chart using Chart.js -->
+    <script>
+      // Function to generate a dynamic color palette
+      function generateColorPalette(count) {
+        const colorPalette = [];
+        for (let i = 0; i < count; i++) {
+          const hue = Math.floor(240 * i / count); // Change the hue value to adjust the color palette
+          colorPalette.push(`hsl(${hue}, 50%, 50%)`); // Adjust the saturation and lightness values to change the appearance of the colors
+        }
+        return colorPalette;
+      }
+
+      const labels = <%- JSON.stringify(labels) %>;
+      const counts = <%- JSON.stringify(counts) %>;
+
+      // Create the pie chart
+      new Chart(document.getElementById('pieChart'), {
+        type: 'doughnut',
+        data: {
+          labels: labels,
+          datasets: [{
+            data: counts,
+            backgroundColor: ["#fe895a", "#213157", "#46d4c9", "#fcc961", "#929aa0", "#8fd5ee", "#FFDC00", "#001f3f", "#39CCCC", "#01FF70", "#85144b", "#F012BE", "#3D9970", "#111111", "#AAAAAA"],
+            borderColor: 'white', // Set the border color to white for all segments
+            borderWidth: 2, // Adjust the border width as needed
+          }],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          aspectRatio: 1.2,
+          plugins: { 
+            title: {
+              display: true,
+              position: 'top',
+              align: 'start',
+              text: 'Formas de Pagamento',
+              color: 'black',
+              font: {
+                size: 26,
+              },
+              padding: 10,
+            },
+            legend: {
+              position: 'right',
+              labels: {
+                boxWidth: 30,
+                color: 'black',
+                font: {
+                  size: 13,
+                }
+            }
+           },
+          },
+          elements: {
+            arc:{
+              borderWidth :2, // Set a standard border width for all segments
+              borderRadius :5, 
+              spacing :3, 
+            },
+          },
+        }
+      });
+
+      const planoLabels = <%- JSON.stringify(planoLabels) %>;
+      const planoCounts = <%- JSON.stringify(planoCounts) %>;
+
+      Chart.defaults.font.family = "Montserrat"  //Muda a fonte de tudo no gráfico pra Montserrat
+
+      // Create the half-doughnut chart
+      new Chart(document.getElementById('halfDoughnutChart'), {
+        type: 'doughnut',
+        data: {
+          labels: planoLabels,
+          datasets: [{
+            data: planoCounts,
+            backgroundColor: ["#fe895a", "#213157", "#46d4c9", "#fcc961", "#929aa0", "#8fd5ee", "#FFDC00", "#001f3f", "#39CCCC", "#01FF70", "#85144b", "#F012BE", "#3D9970", "#111111", "#AAAAAA"],
+            borderColor: 'white', // Set the border color to white for all segments
+            borderWidth: 2, // Adjust the border width as needed
+          }],
+        },
+        options: {
+          rotation: -90,
+          circumference: 180,
+          responsive: true,
+          maintainAspectRatio: false,
+          cutout: '50%',
+          plugins: { 
+            title: {
+              display: true,
+              align: 'start',
+              position: 'top',
+              text: 'Planos',
+              color: 'black',
+              font: {
+                size: 26,
+              },
+              padding: 10,
+            },
+            legend: {
+              position: 'right',
+              labels: {
+                color: 'black',
+                font: {
+                  size: 16,
+                }
+            }
+           },
+          },
+          elements:{
+            arc:{
+              borderWidth :2, // Set a standard border width for all segments
+              borderRadius :5, 
+              spacing :5, 
+            },
+          },
+        }
+      });
+    </script>
+  </div>
+</body>
+</html>

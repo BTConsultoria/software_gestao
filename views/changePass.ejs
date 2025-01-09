@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Redefinir senha</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com/">
+    <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin="">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+	  <link rel="stylesheet" href="../assets/changePass.css">
+  </head>
+  <body>
+    <div class="box">
+      <div class="topo">
+        <button onClick="window.location.href='http://localhost:3000/login';" class="voltar"><strong><br>←  Voltar</strong></button>
+        <!-- AVISO!! MUDAR A LINHA ACIMA NO SITE REAL -->
+        <img class="img_logo" src="./login_files/Logo.png" alt="logo-biotech">
+      </div>
+      <p class="titulo"><strong>Redefina sua senha</strong></p>
+      <% if (showErrorMessage) { %>
+        <p class="feedback"><%= errorMessage %></p>
+      <% } else { %>
+        <div class="requisitos_senha">
+          <p>A senha precisa ter pelo menos:</p>
+          <ul class="lista">
+            <li>8 caracteres</li>
+            <li>1 letra maiúscula</li>
+            <li>1 número</li>
+            <li>1 caractere especial</li>
+          </ul>
+        </div>
+        <div class="forms">
+          <form class="input_forms" action="/changePass" method="post">
+            <div>
+              <input type="password" id="password" name="password" placeholder="Digite a senha" required />
+              <input type="hidden" name="email" value=<%= email %>>
+              <input type="hidden" name="token" value=<%= token %>>
+            </div>
+            <div>
+              <input type="password" id="confirm-password" name="confirm-password" placeholder="Confirme a senha" required />
+            </div>
+            <div class="botao">
+              <button type="submit">Concluído</button>
+            </div>
+          </form>
+        </div>
+        <script>
+          const form = document.querySelector('form');
+          const passwordInput = document.querySelector('#password');
+          const confirmPasswordInput = document.querySelector('#confirm-password');
+
+          form.addEventListener('submit', event => {
+            if (passwordInput.value.length < 8) {
+              alert('A senha deve ter pelo menos 8 caracteres.');
+              event.preventDefault();
+            } else if (!/[a-z]/.test(passwordInput.value)) {
+              alert('A senha deve conter pelo menos 1 letra minúscula.');
+              event.preventDefault();
+            } else if (!/[A-Z]/.test(passwordInput.value)) {
+              alert('A senha deve conter pelo menos 1 letra maiúscula');
+              event.preventDefault();
+            } else if (!/\d/.test(passwordInput.value)) {
+              alert('A senha deve conter pelo menos 1 número.');
+              event.preventDefault();
+            } else if (!/[^\w\s]/.test(passwordInput.value)) {
+              alert('A senha deve conter pelo menos 1 caractere especial.');
+              event.preventDefault();
+            } else if (passwordInput.value !== confirmPasswordInput.value) {
+              alert('As senhas não coincidem.');
+              event.preventDefault();
+            }
+          });
+        </script>
+      <% } %>
+    </div>
+  </body>
+</html>

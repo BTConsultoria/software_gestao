@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+<head>
+  <meta charset="UTF-8">
+  <title>Custos</title>
+  <link rel="stylesheet" href="../assets/custos.css">
+  <script>
+    function sortTable(columnIndex) {
+  var table = document.getElementById("custosTable");
+  var rows = Array.from(table.rows).slice(1); // Exclude the header row
+
+  rows.sort(function(a, b) {
+    var aValue, bValue;
+
+    switch (columnIndex) {
+      case 0: // Data Registro
+      case 1: // Data Saída
+        aValue = parseDate(a.cells[columnIndex].innerHTML);
+        bValue = parseDate(b.cells[columnIndex].innerHTML);
+        break;
+      case 3: // Quantidade
+      case 5: // Valor Total
+      case 4: // Valor Unitário
+        aValue = parseFloat(a.cells[columnIndex].innerHTML.replace(",", "."));
+        bValue = parseFloat(b.cells[columnIndex].innerHTML.replace(",", "."));
+        break;
+    }
+
+    return aValue - bValue;
+  });
+
+  // Clear the existing rows
+  while (table.rows.length > 1) {
+    table.deleteRow(1);
+  }
+
+  // Re-insert the rows in the sorted order
+  rows.forEach(function(row) {
+    table.appendChild(row);
+  });
+}
+
+function parseDate(dateString) {
+  var dateParts = dateString.split("/");
+  return new Date(dateParts[2], dateParts[1] - 1, dateParts[0]).getTime();
+}
+
+
+function resetTable() {
+  var table = document.getElementById("custosTable");
+  var rows = Array.from(table.rows).slice(1); // Exclude the header row
+
+  rows.sort(function(a, b) {
+    var aIndex = parseInt(a.getAttribute("data-index"));
+    var bIndex = parseInt(b.getAttribute("data-index"));
+    return aIndex - bIndex;
+  });
+
+  // Clear the existing rows
+  while (table.rows.length > 1) {
+    table.deleteRow(1);
+  }
+
+  // Re-insert the rows in the initial order
+  rows.forEach(function(row) {
+    table.appendChild(row);
+  });
+}
+
+
+    function filterTable() {
+      var input, filter, table, tr, td, i, txtValue;
+      input = document.getElementById("searchInput");
+      filter = input.value.toUpperCase();
+      table = document.getElementById("custosTable");
+      tr = table.getElementsByTagName("tr");
+
+      var selectedColumn = document.getElementById("filterColumn").value;
+
+      for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td")[selectedColumn];
+
+        if (td) {
+          txtValue = td.textContent || td.innerText;
+          if (txtValue.toUpperCase().indexOf(filter) > -1) {
+            tr[i].classList.add("fade-in");
+            tr[i].style.display = "";
+          } else {
+            tr[i].classList.remove("fade-in");
+            tr[i].style.display = "none";
+          }
+        }
+      }
+    }
+
+    function showDateInput() {
+      var selectedOption = document.getElementById("filterColumn").value;
+      var dateInputContainer = document.getElementById("dateInputContainer");
+      var searchButton = document.getElementById("searchButton");
+
+      searchButton.classList.remove("searched");
+
+      if (selectedOption === "data_registro" || selectedOption === "data_saida") {
+        dateInputContainer.style.display = "block";
+        searchButton.style.display = "block";
+      } else {
+        dateInputContainer.style.display = "none";
+        searchButton.style.display = "none";
+      }
+    }
+
+    function filterByDate() {
+  var initialDateInput = moment(document.getElementById("initialDateInput").value, "YYYY-MM-DD");
+  var finalDateInput = moment(document.getElementById("finalDateInput").value, "YYYY-MM-DD");
+  var table = document.getElementById("custosTable");
+  var tr = table.getElementsByTagName("tr");
+
+  var selectedOption = document.getElementById("filterColumn").value;
+
+  for (var i = 0; i < tr.length; i++) {
+    var td = tr[i].getElementsByTagName("td")[0];
+
+    if (selectedOption === "data_saida") {
+      td = tr[i].getElementsByTagName("td")[1];
+    }
+
+    if (td && td.textContent) { // Add null check for td and td.textContent
+      var dateValue = moment(td.textContent, "DD/MM/YYYY");
+
+      if (dateValue.isValid()) {
+        dateValue.set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+
+        if (selectedOption === "data_registro") {
+          if (dateValue.isSameOrAfter(initialDateInput) && dateValue.isSameOrBefore(finalDateInput)) {
+            tr[i].classList.add("fade-in");
+            tr[i].style.display = "";
+          } else {
+            tr[i].classList.remove("fade-in");
+            tr[i].style.display = "none";
+          }
+        } else if (selectedOption === "data_saida") {
+          if (dateValue.isSameOrAfter(initialDateInput) && dateValue.isSameOrBefore(finalDateInput)) {
+            tr[i].classList.add("fade-in");
+            tr[i].style.display = "";
+          } else {
+            tr[i].classList.remove("fade-in");
+            tr[i].style.display = "none";
+          }
+        }
+      }
+    }
+  }
+  
+  // Retrieve the newly added entry from the table and create the newCusto object
+  var filteredRows = Array.from(tr).filter(row => row.style.display !== "none");
+  var newCusto = {};
+
+  if (filteredRows.length > 0) {
+    var tdList = filteredRows[0].getElementsByTagName("td");
+    newCusto = {
+      data_registro: tdList[0]?.textContent || tdList[0]?.innerText,
+      data_saida: tdList[1]?.textContent || tdList[1]?.innerText,
+      descricao: tdList[2]?.textContent || tdList[2]?.innerText,
+      quantidade: tdList[3]?.textContent || tdList[3]?.innerText,
+      valor_unit: tdList[4]?.textContent || tdList[4]?.innerText,
+      valor_total: tdList[5]?.textContent || tdList[5]?.innerText
+    };
+  }
+  
+  //console.log("New Custo:", newCusto);
+}
+
+
+    function openModal() {
+      document.getElementById("modal").style.display = "block";
+    }
+
+    function closeModal() {
+      document.getElementById("modal").style.display = "none";
+    }
+
+    function saveEntry() {
+      var dataRegistroInput = document.getElementById("dataRegistroInput");
+      var dataSaidaInput = document.getElementById("dataSaidaInput");
+      var descricaoInput = document.getElementById("descricaoInput");
+      var quantidadeInput = document.getElementById("quantidadeInput");
+      var valorUnitInput = document.getElementById("valorUnitInput");
+
+      var dataRegistro = dataRegistroInput.value;
+      var dataSaida = dataSaidaInput.value;
+
+      if (dataRegistro === "" || dataSaida === "") {
+        alert("Please enter values for both 'Data de Registro' and 'Data de Saída'.");
+        return;
+      }
+
+      var descricao = descricaoInput.value;
+      var quantidade = quantidadeInput.value;
+      var valorUnit = valorUnitInput.value;
+
+      // Calculate valorTotal
+      var valorTotal = (parseFloat(quantidade) * parseFloat(valorUnit)).toFixed(2);
+
+      var xhr = new XMLHttpRequest();
+
+      xhr.open("POST", "/save-entry", true);
+      xhr.setRequestHeader("Content-Type", "application/json");
+
+      xhr.onload = function () {
+        if (xhr.status === 200) {
+          var response = JSON.parse(xhr.responseText);
+          var newCusto = response.custo;
+
+          // Append the newly added row to the end of the table
+          var table = document.getElementById("custosTable");
+          var newRow = table.insertRow(table.rows.length);
+          var cell1 = newRow.insertCell(0);
+          var cell2 = newRow.insertCell(1);
+          var cell3 = newRow.insertCell(2);
+          var cell4 = newRow.insertCell(3);
+          var cell5 = newRow.insertCell(4);
+          var cell6 = newRow.insertCell(5);
+
+          // Assign the formatted values to the table cells
+          cell1.innerHTML = newCusto.data_registro;
+          cell2.innerHTML = newCusto.data_saida;
+          cell3.innerHTML = newCusto.descricao;
+          cell4.innerHTML = newCusto.quantidade;
+          cell5.innerHTML = newCusto.valor_unit;
+          cell6.innerHTML = newCusto.valor_total;
+
+          // Clear the input values
+          dataRegistroInput.value = "";
+          dataSaidaInput.value = "";
+          descricaoInput.value = "";
+          quantidadeInput.value = "";
+          valorUnitInput.value = "";
+
+          closeModal();
+        } else {
+          // Handle the error response
+        }
+      };
+
+      var requestBody = JSON.stringify({
+        dataRegistro: dataRegistro,
+        dataSaida: dataSaida,
+        descricao: descricao,
+        quantidade: quantidade,
+        valorUnit: valorUnit,
+        valorTotal: valorTotal,
+      });
+
+      xhr.send(requestBody);
+
+      closeModal();
+    }
+    
+  </script>
+</head>
+<body>
+  <h1>Custos</h1>
+  <div class="table-container">
+    <table id="custosTable">
+      <tr>
+        <th colspan="6">
+          <button onclick="openModal()" style="float: left;">Button Left</button>
+          <button onclick="resetTable()">Reset Sorting</button>
+          <div style="float: right;">
+            <select id="filterColumn" onchange="showDateInput(); filterTable();">
+              <option value="2">Descrição</option>
+              <option value="3">Quantidade</option>
+              <option value="4">Valor Unitário</option>
+              <option value="5">Valor Total</option>
+              <option value="data_registro">Data Reg.</option>
+              <option value="data_saida">Data Sa.</option>
+            </select>
+            <br>
+            <input type="text" id="searchInput" onkeyup="filterTable()" placeholder="Search">
+            <div id="dateInputContainer" style="display: none; padding-top: 10px;">
+              <label for="initialDateInput">Initial Date:</label>
+              <input type="date" id="initialDateInput">
+              <label for="finalDateInput">Final Date:</label>
+              <input type="date" id="finalDateInput">
+            </div>
+            <button id="searchButton" onclick="filterByDate()" style="display: none;">Search</button>
+          </div>
+          <div style="clear: both;"></div>
+        </th>
+      </tr>
+      <tr>
+        <th onclick="sortTable(0)">Data de Registro</th>
+        <th onclick="sortTable(1)">Data de Saída</th>
+        <th onclick="sortTable(2)">Descrição</th>
+        <th onclick="sortTable(3)">Quantidade</th>
+        <th onclick="sortTable(4)">Valor Unitário</th>
+        <th onclick="sortTable(5)">Valor Total</th>
+      </tr>
+      <% custos.forEach((custo, index) => { %>
+        <tr data-index="<%= index + 1 %>">
+          <td><%= custo.data_registro %></td>
+          <td><%= custo.data_saida %></td>
+          <td><%= custo.descricao %></td>
+          <td><%= custo.quantidade %></td>
+          <td><%= custo.valor_unit %></td>
+          <td><%= custo.valor_total %></td>
+        </tr>
+      <% }); %>
+    </table>
+  </div>
+
+  <!-- Pop-up screen HTML -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <h2>Add New Entry</h2>
+      <label for="dataRegistroInput">Data de Registro:</label>
+      <input type="date" id="dataRegistroInput">
+      <label for="dataSaidaInput">Data de Saída:</label>
+      <input type="date" id="dataSaidaInput">
+      <label for="descricaoInput">Descrição:</label>
+      <input type="text" id="descricaoInput">
+      <label for="quantidadeInput">Quantidade:</label>
+      <input type="number" id="quantidadeInput">
+      <label for="valorUnitInput">Valor Unitário:</label>
+      <input type="number" step="0.01" id="valorUnitInput">
+      <button onclick="closeModal()">Cancel</button>
+      <button onclick="saveEntry()">Save</button>
+    </div>
+  </div>
+</body>
+</html>

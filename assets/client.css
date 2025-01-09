@@ -1,0 +1,101 @@
+body,
+input,
+button,
+.card-title,
+.form-control,
+label {
+    font-family: 'Montserrat', sans-serif;
+}
+
+.botoes{
+    background-color: #ff914d;
+    color: #fff;
+    border: 2px solid #ff914d;
+    padding: 6px 9px 6px 9px;
+    border-radius: 7px;
+    margin-left: 44px;
+    margin-right: -40px;
+    margin-top: 37px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.2s
+    }
+    
+.botoes:active,
+.active {
+    background-color: #fff;
+    color: #ff914d;
+    border: 2px solid #ff914d;
+    border-radius: 7px;
+    margin-right: -40px;
+    font-size: 15px;
+    transition: 0.2s;
+    cursor: pointer;
+    }
+    
+.card {
+    background-color: #fefefe;
+    margin: auto;
+    padding: 20px;
+    padding-bottom: 20px;
+    border: 1px solid #888;
+    width: 100%;
+    max-width: 2300px;
+    border-radius: 18px !important;
+    box-shadow: 0px -10px #ff914d, 0px 4px 2px #dcdcdc;
+}
+
+.card_title {
+    align-items: left;
+    width: 70%;
+    color: black;
+}
+
+.form-row {
+    display: flex;
+    justify-content: space-between;
+}
+
+.form-group {
+    width: 48%;
+}
+
+.form-group2 {
+    width: 30%;
+    margin-top: 1%;
+}
+
+.form-group3 {
+    width: 65%;
+    margin-top: 1%;
+}
+
+.form-group4 {
+    width: 30%;
+    margin-top: 1%;
+}
+
+.button {
+    background-color: #1f2659;
+    color: #fff;
+    border: 2px solid #1f2659;
+    padding: 6px 9px 6px 9px;
+    border-radius: 7px;
+    margin-left: -0.5%;
+    margin-top: 37px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.2s
+}
+
+
+.button:hover {
+    background-color: #324487;
+    color: #fff;
+    border: 2px solid #324487;
+    border-radius: 7px;
+    margin-right: -20px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: 0.2s
+}

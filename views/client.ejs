@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pacientes Form</title>
+    <link rel="stylesheet" href="../assets/client.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Include jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+
+
+</head>
+
+<body>
+    <button id="novo-paciente-button" class="botoes">Novo paciente</button>
+    <button id="nova-consulta-button" class="botoes">Nova consulta</button>
+    
+
+    <!-- Consultas Form -->
+    <div id="pacientes-form-container">
+        <div class="container mt-5">
+            <div class="card">
+                <div class="card-body">
+                    <div style="display: flex; border-bottom: 2px solid black; padding: 0px; margin: 25px 5px">
+                        <h3 class="card-title" align="left">Informações do paciente</h3>
+                    </div>
+                    <form id="pacientes-form" class="formulario">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="nome">Nome</label>
+                                <input type="text" class="form-control" id="nome" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="genero">Gênero</label>
+                                <input type="text" class="form-control" id="genero" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group2">
+                                <label for="nome_social">Nome Social</label>
+                                <input type="text" class="form-control" id="nome_social">
+                            </div>
+                            <div class="form-group2">
+                                <label for="data_de_nascimento">Data de Nascimento</label>
+                                <input type="date" class="form-control" id="data_de_nascimento" required>
+                            </div>
+                            <div class="form-group2">
+                                <label for="cpf">CPF</label>
+                                <input type="number" class="form-control" id="cpf" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group2">
+                                <label for="cep">CEP</label>
+                                <input type="number" class="form-control" id="cep" required>
+                            </div>
+                            <div class="form-group2">
+                                <label for="cidade">Cidade</label>
+                                <input type="text" class="form-control" id="cidade" required>
+                            </div>
+                            <div class="form-group2">
+                                <label for="bairro">Bairro</label>
+                                <input type="text" class="form-control" id="bairro" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group3">
+                                <label for="endereco">Endereço</label>
+                                <input type="text" class="form-control" id="endereco" required>
+                            </div>
+                            <div class="form-group4">
+                                <label for=complemento>Complemento</label>
+                                <input type=text class=form-control id=complemento>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class=form-group2>
+                                <label for=email>Email</label>
+                                <input type=email class=form-control id=email required>
+                            </div>
+                            <div class=form-group2>
+                                <label for=telefone>Telefone</label>
+                                <input type=number class=form-control id=telefone required>
+                            </div>
+                            <div class=form-group2>
+                                <label for=telefone2>Telefone 2</label>
+                                <input type=number class=form-control id=telefone2>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type=submit class=button>Concluir Cadastro</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Consultas Form -->
+    <div id="consultas-form-container" style="display: none;">
+        <div class="container mt-5">
+            <div class="card">
+                <div class="card-body">
+                    <div style="display: flex; border-bottom: 2px solid black; padding: 0px; margin: 25px 5px">
+                        <h3 class="card-title" align="left">Agendamento de Consultas</h3>
+                    </div>
+                    <form id="consultas-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="nome">Nome</label>
+                                <input type="text" class="form-control" id="nome2" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="cpf">CPF</label>
+                                <input type="text" class="form-control" id="cpf2" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="especialidade">Especialidade</label>
+                                <input type="text" class="form-control" id="especialidade" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="medico">Médico</label>
+                                <input type="text" class="form-control" id="medico" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="data">Data</label>
+                                <input type="date" class="form-control" id="data" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="horario">Horário</label>
+                                <input type="time" class="form-control" id="horario" required>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type=submit class=button>Concluir Agendamento</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        $(document).ready(function () {
+
+            $('#novo-paciente-button').addClass('active');
+
+            $('#pacientes-form').on('submit', function (event) {
+                event.preventDefault();
+
+                var formData = {
+                    nome: $('#nome').val(),
+                    genero: $('#genero').val(),
+                    nome_social: $('#nome_social').val(),
+                    data_de_nascimento: $('#data_de_nascimento').val(),
+                    cpf: $('#cpf').val(),
+                    cep: $('#cep').val(),
+                    cidade: $('#cidade').val(),
+                    bairro: $('#bairro').val(),
+                    endereco: $('#endereco').val(),
+                    complemento: $('#complemento').val(),
+                    email: $('#email').val(),
+                    telefone: $('#telefone').val(),
+                    telefone2: $('#telefone2').val() || 0,
+                };
+
+                $.ajax({
+                    url: '/client',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(formData),
+                    success: function (data) {
+                        console.log('Form submitted successfully.');
+                        alert('Form submitted successfully.');
+                        $('#pacientes-form')[0].reset();
+                    },
+                    error: function (error) {
+                        console.log('Error:', error);
+                        alert('An error occurred. Please try again.');
+                    }
+                });
+            });
+        });
+
+        $(document).ready(function () {
+
+            $('#nova-consulta-button').click(function () {
+                $('#pacientes-form-container').hide();
+                $('#novo-paciente-button').removeClass('active');
+
+                $('#consultas-form-container').show();
+                $('#nova-consulta-button').addClass('active');
+            });
+
+            $('#novo-paciente-button').click(function () {
+                $('#consultas-form-container').hide();
+                $('#nova-consulta-button').removeClass('active');
+
+                $('#pacientes-form-container').show();
+                $('#novo-paciente-button').addClass('active');
+            });
+
+
+            $('#consultas-form').on('submit', function (event) {
+                event.preventDefault();
+
+                var formData = {
+                    nome: $('#nome2').val(),
+                    cpf: $('#cpf2').val(),
+                    especialidade: $('#especialidade').val(),
+                    medico: $('#medico').val(),
+                    data: $('#data').val(),
+                    horario: $('#horario').val()
+                };
+
+                $.ajax({
+                    url: '/api/consultas_table',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(formData),
+                    success: function (data) {
+                        console.log('Form submitted successfully.');
+                        alert('Form submitted successfully.');
+                        $('#consultas-form')[0].reset();
+                    },
+                    error: function (error) {
+                        console.log('Error:', error);
+                        alert('An error occurred. Please try again.');
+                    }
+                });
+            });
+        });
+
+
+    </script>
+</body>

@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+  <link rel="stylesheet" href="../assets/faturamento.css">
+<head>
+  <meta charset="UTF-8">
+  <title>Faturamento</title>
+  <script>
+
+  // Updated deleteEntries function to delete selected rows
+  function deleteEntries() {
+    var table = document.getElementById('fat_table');
+    var checkboxes = table.getElementsByClassName('delete-checkbox');
+    var rowsToDelete = [];
+
+    // Find the rows marked for deletion
+    for (var i = checkboxes.length - 1; i >= 0; i--) {
+      if (checkboxes[i].checked) {
+        var row = checkboxes[i].closest('tr');
+        var id = checkboxes[i].getAttribute('data-id');
+        rowsToDelete.push(id);
+        table.deleteRow(row.rowIndex); // Remove the row from the table
+      }
+    }
+
+    // Send the IDs of the rows marked for deletion to the backend
+    var xhr = new XMLHttpRequest();
+    xhr.open('POST', '/delete-entries-fat', true);
+    xhr.setRequestHeader('Content-Type', 'application/json');
+    xhr.onreadystatechange = function () {
+      if (xhr.readyState === 4) {
+        if (xhr.status === 200) {
+          console.log('Entries deleted successfully');
+        } else {
+          console.error('Error deleting entries:', xhr.status, xhr.responseText);
+        }
+      }
+    };
+    xhr.send(JSON.stringify({ ids: rowsToDelete }));
+  }
+    function sortTable(columnIndex) {
+  var table = document.getElementById("fat_table");
+  var rows = Array.from(table.rows).slice(1); // Exclude the header row
+
+  rows.sort(function (a, b) {
+    var aValue, bValue;
+
+    switch (columnIndex) {
+      case 0: // Data
+        aValue = parseDate(a.cells[columnIndex].innerText);
+        bValue = parseDate(b.cells[columnIndex].innerText);
+        break;
+      case 6: // Valor
+      case 11: // Desconto
+      case 12: // Valor Líquido
+        aValue = parseFloat(a.cells[columnIndex].innerText.replace(",", "."));
+        bValue = parseFloat(b.cells[columnIndex].innerText.replace(",", "."));
+        break;
+      case 8: // Parcelamento
+        aValue = parseInt(a.cells[columnIndex].innerText);
+        bValue = parseInt(b.cells[columnIndex].innerText);
+        break;
+      default:
+        aValue = a.cells[columnIndex].innerText.toLowerCase();
+        bValue = b.cells[columnIndex].innerText.toLowerCase();
+        break;
+    }
+
+    if (columnIndex === 0 || columnIndex === 6 || columnIndex === 11 || columnIndex === 12 || columnIndex === 8) {
+      // Sort by date, numeric value, or parcelamento in ascending order
+      return aValue - bValue;
+    } else {
+      // Sort alphabetically in ascending order
+      return aValue.localeCompare(bValue);
+    }
+  });
+
+  // Clear the existing rows (excluding the header row)
+  for (var i = table.rows.length - 1; i > 0; i--) {
+    table.deleteRow(i);
+  }
+
+  // Re-insert the rows in the sorted order
+  rows.forEach(function (row) {
+    table.appendChild(row);
+  });
+}
+
+
+function parseDate(dateString) {
+  var dateParts = dateString.split("/");
+  return new Date(dateParts[2], dateParts[1] - 1, dateParts[0]).getTime();
+}
+
+
+function resetTable() {
+  var table = document.getElementById("fat_table");
+  var rows = Array.from(table.rows).slice(1); // Exclude the header row
+
+  rows.sort(function (a, b) {
+    var aIndex = parseInt(a.getAttribute("data-index"));
+    var bIndex = parseInt(b.getAttribute("data-index"));
+    return aIndex - bIndex;
+  });
+
+  // Clear the existing rows
+  while (table.rows.length > 1) {
+    table.deleteRow(1);
+  }
+
+  // Re-insert the rows in the initial order
+  rows.forEach(function (row) {
+    table.appendChild(row);
+    row.classList.add("fade-in"); // Re-add fade-in class after resetting the table
+    row.style.display = ""; // Re-display the rows after resetting the table
+  });
+}
+
+
+
+function filterTable() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("searchInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("fat_table");
+  tr = table.getElementsByTagName("tr");
+
+  var selectedColumn = document.getElementById("filterColumn").value;
+
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[selectedColumn];
+
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].classList.add("fade-in");
+        tr[i].style.display = "";
+      } else {
+        tr[i].classList.remove("fade-in");
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
+
+
+function showDateInput() {
+  var selectedOption = document.getElementById("filterColumn").value;
+  var dateInputContainer = document.getElementById("dateInputContainer");
+  var searchButton = document.getElementById("searchButton");
+
+  searchButton.classList.remove("searched");
+
+  if (selectedOption === "0") {
+    dateInputContainer.style.display = "block";
+    searchButton.style.display = "block";
+  } else {
+    dateInputContainer.style.display = "none";
+    searchButton.style.display = "none";
+    // If the selected filter is not Date, reset the table and remove any applied filters
+    resetTable();
+  }
+}
+
+
+
+
+
+function filterByDate() {
+  var initialDateInput = moment(document.getElementById("initialDateInput").value, "YYYY-MM-DD");
+  var finalDateInput = moment(document.getElementById("finalDateInput").value, "YYYY-MM-DD");
+  var table = document.getElementById("fat_table");
+  var tr = table.getElementsByTagName("tr");
+
+  var selectedOption = document.getElementById("filterColumn").value;
+  if (selectedOption !== "0") {
+    // If the selected filter is not Date, reset the table and remove any applied filters
+    resetTable();
+    return;
+  }
+
+  for (var i = 0; i < tr.length; i++) {
+    var td = tr[i].getElementsByTagName("td")[0];
+    if (td && td.textContent) {
+      var dateValue = moment(td.textContent, "DD/MM/YYYY");
+      if (dateValue.isValid()) {
+        dateValue.set({ hour: 0, minute: 0, second: 0, millisecond: 0 });
+        if (dateValue.isSameOrAfter(initialDateInput) && dateValue.isSameOrBefore(finalDateInput)) {
+          tr[i].classList.add("fade-in");
+          tr[i].style.display = "";
+        } else {
+          tr[i].classList.remove("fade-in");
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  }
+}
+
+
+
+    function openModal() {
+      document.getElementById("modal").style.display = "block";
+    }
+
+    function closeModal() {
+      document.getElementById("modal").style.display = "none";
+    }
+
+    function saveEntry() {
+  var dataInput = document.getElementById("dataInput");
+  var pacienteInput = document.getElementById("pacienteInput");
+  var cpfInput = document.getElementById("cpfInput");
+  var planoSelect = document.getElementById("planoSelect");
+  var procedimentoInput = document.getElementById("procedimentoInput");
+  var situacaoInput = document.getElementById("situacaoInput");
+  var valorInput = document.getElementById("valorInput");
+  var pagamentoSelect = document.getElementById("pagamentoSelect");
+  var parcelamentoSelect = document.getElementById("parcelamentoSelect");
+  var bandeiraSelect = document.getElementById("bandeiraSelect");
+  var taxaInput = document.getElementById("taxaInput");
+  var descontoInput = document.getElementById("descontoInput");
+  var valorLiqInput = document.getElementById("valorLiqInput");
+
+  var data = dataInput.value;
+  var paciente = pacienteInput.value;
+  var cpf = cpfInput.value;
+  var plano = planoSelect.value;
+  var procedimento = procedimentoInput.value;
+  var situacao = situacaoInput.value;
+  var valor = valorInput.value;
+  var pagamento = pagamentoSelect.value;
+  var parcelamento = parcelamentoSelect.value;
+  var bandeira = bandeiraSelect.value;
+  var taxa = taxaInput.value;
+  var desconto = descontoInput.value;
+  var valorLiq = valorLiqInput.value;
+
+  if (data === "" || paciente === "" || cpf === "" || plano === "placeholder" || procedimento === "" || situacao === "" || valor === "" || pagamento === "placeholder" || parcelamento === "placeholder" || bandeira === "placeholder" || taxa === "" || desconto === "" || valorLiq === "") {
+    alert("Please fill in all the required fields.");
+    return;
+  }
+
+  var xhr = new XMLHttpRequest();
+
+  xhr.open("POST", "/save-entry-fat", true);
+  xhr.setRequestHeader("Content-Type", "application/json");
+
+  xhr.onload = function () {
+    if (xhr.status === 200) {
+      var response = JSON.parse(xhr.responseText);
+      var newCusto = response.custo;
+
+      // Append the newly added row to the end of the table
+      var table = document.getElementById("fat_table");
+      var newRow = table.insertRow(table.rows.length);
+      var cell1 = newRow.insertCell(0);
+      var cell2 = newRow.insertCell(1);
+      var cell3 = newRow.insertCell(2);
+      var cell4 = newRow.insertCell(3);
+      var cell5 = newRow.insertCell(4);
+      var cell6 = newRow.insertCell(5);
+      var cell7 = newRow.insertCell(6);
+      var cell8 = newRow.insertCell(7);
+      var cell9 = newRow.insertCell(8);
+      var cell10 = newRow.insertCell(9);
+      var cell11 = newRow.insertCell(10);
+      var cell12 = newRow.insertCell(11);
+      var cell13 = newRow.insertCell(12);
+      var cell14 = newRow.insertCell(13);
+
+      // Assign the formatted values to the table cells
+      cell1.innerHTML = newCusto.data;
+      cell2.innerHTML = newCusto.paciente;
+      cell3.innerHTML = newCusto.cpf;
+      cell4.innerHTML = newCusto.plano;
+      cell5.innerHTML = newCusto.procedimento;
+      cell6.innerHTML = newCusto.situacao;
+      cell7.innerHTML = newCusto.valor;
+      cell8.innerHTML = newCusto.pagamento;
+      cell9.innerHTML = newCusto.parcelamento;
+      cell10.innerHTML = newCusto.bandeira;
+      cell11.innerHTML = newCusto.taxa;
+      cell12.innerHTML = newCusto.desconto;
+      cell13.innerHTML = newCusto.valor_liq;
+      cell14.innerHTML = ""; // Leave the last cell empty as it's not included in the database
+
+      // Clear the input values
+      dataInput.value = "";
+      pacienteInput.value = "";
+      cpfInput.value = "";
+      planoSelect.value = "placeholder";
+      procedimentoInput.value = "";
+      situacaoInput.value = "";
+      valorInput.value = "";
+      pagamentoSelect.value = "placeholder";
+      parcelamentoSelect.value = "placeholder";
+      bandeiraSelect.value = "placeholder";
+      taxaInput.value = "";
+      descontoInput.value = "";
+      valorLiqInput.value = "";
+
+      closeModal();
+    } else {
+      // Handle the error response
+    }
+  };
+
+  var requestBody = JSON.stringify({
+    data: data,
+    paciente: paciente,
+    cpf: cpf,
+    plano: plano,
+    procedimento: procedimento,
+    situacao: situacao,
+    valor: valor,
+    pagamento: pagamento,
+    parcelamento: parcelamento,
+    bandeira: bandeira,
+    taxa: taxa,
+    desconto: desconto,
+    valorLiq: valorLiq,
+  });
+
+  xhr.send(requestBody);
+
+  closeModal();
+}
+
+    
+  </script>
+</head>
+<body>
+  <h1>Faturamento</h1>
+  <div class="table-container">
+    <div>
+      <button onclick="openModal()" class="cadastro" style="float: left;">Novo Cadastro</button>
+          <button onclick="resetTable()" class="cadastro">Reset Sorting</button>
+      <div style="float: right;">
+        <select class="select" id="filterColumn" onchange="showDateInput(); filterTable();">
+          <option value="select" selected>Select...</option>
+          <option value="0">Data</option>
+          <option value="1">Paciente</option>
+          <option value="2">CPF</option>
+          <option value="3">Plano</option>
+          <option value="4">Procedimento</option>
+          <option value="5">Situação</option>
+          <option value="6">Valor</option>
+          <option value="7">Pagamento</option>
+          <option value="8">Parcelamento</option>
+          <option value="9">Bandeira</option>
+          <option value="10">Taxa</option>
+          <option value="11">Desconto</option>
+          <option value="12">Valor Líquido</option>
+        </select>
+        <br>
+        <input class="input-icon" type="text" id="searchInput" onkeyup="filterTable()" placeholder="Search">
+        <div id="dateInputContainer" style="display: none; padding-top: 10px;">
+          <label for="initialDateInput">Initial Date:</label>
+          <input type="date" id="initialDateInput">
+          <label for="finalDateInput">Final Date:</label>
+          <input type="date" id="finalDateInput">
+        </div>
+        <button id="searchButton" onclick="filterByDate()" style="display: none;">Search</button>
+      </div>
+      <div style="clear: both;"></div>
+    </div>
+
+    <tr>
+      <th colspan="7">
+        <div style="display: flex; border-bottom: 2px solid black; padding: 0px; margin-bottom: 15px;">
+          <div style="align-items: left; width: 30%;"><h1 style="color: black; margin: 0px;" align="left">Faturamento</h1></div>
+        </div>
+      </th>
+    </tr>
+    
+    <table id="fat_table">
+      <thead>
+        <tr>
+          <th onclick="sortTable(0)" data-sort="date">Data</th>
+          <th onclick="sortTable(1)" data-sort="string">Paciente</th>
+          <th onclick="sortTable(2)" data-sort="string">CPF</th>
+          <th onclick="sortTable(3)" data-sort="string">Plano</th>
+          <th onclick="sortTable(4)" data-sort="string">Procedimento</th>
+          <th onclick="sortTable(5)" data-sort="string">Situação</th>
+          <th onclick="sortTable(6)" data-sort="number">Valor</th>
+          <th onclick="sortTable(7)" data-sort="string">Pagamento</th>
+          <th onclick="sortTable(8)" data-sort="number">Parcelamento</th>
+          <th onclick="sortTable(9)" data-sort="string">Bandeira</th>
+          <th onclick="sortTable(10)" data-sort="number">Taxa</th>
+          <th onclick="sortTable(11)" data-sort="number">Desconto</th>
+          <th onclick="sortTable(12)" data-sort="number">Valor Líquido</th>
+          <th>
+            <a class="delete" onclick="deleteEntries()"><img src="../assets/54324.png" width="15px"></a>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <% faturamento.forEach((custo, index) => { %>
+          <tr data-index="<%= index + 1 %>">
+            <td><%= custo.data %></td>
+            <td><%= custo.paciente %></td>
+            <td><%= custo.cpf %></td>
+            <td><%= custo.plano %></td>
+            <td><%= custo.procedimento %></td>
+            <td><%= custo.situacao %></td>
+            <td><%= custo.valor %></td>
+            <td><%= custo.pagamento %></td>
+            <td><%= custo.parcelamento %></td>
+            <td><%= custo.bandeira %></td>
+            <td><%= custo.taxa %></td>
+            <td><%= custo.desconto %></td>
+            <td><%= custo.valor_liq %></td>
+            <td>
+              <input type="checkbox" class="delete-checkbox" data-id="<%= custo.id %>">
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </div>
+  
+
+  <!-- Pop-up screen HTML -->
+  <div id="modal" class="modal">
+    <div class="modal-content">
+      <h2>Add New Entry</h2>
+      <label for="dataInput">Data:</label>
+      <input type="date" id="dataInput">
+      <label for="pacienteInput">Paciente:</label>
+      <input type="text" id="pacienteInput">
+      <label for="cpfInput">CPF:</label>
+      <input type="text" id="cpfInput">
+      <label for="planoSelect">Plano:</label>
+      <select id="planoSelect">
+        <option value="placeholder" disabled selected>Select Plano</option>
+        <option value="plano1">Plano 1</option>
+        <option value="plano2">Plano 2</option>
+        <option value="plano3">Plano 3</option>
+      </select>
+      <label for="procedimentoInput">Procedimento:</label>
+      <input type="text" id="procedimentoInput">
+      <label for="situacaoInput">Situação:</label>
+      <input type="text" id="situacaoInput">
+      <label for="valorInput">Valor:</label>
+      <input type="number" step="0.01" id="valorInput">
+      <label for="pagamentoSelect">Pagamento:</label>
+      <select id="pagamentoSelect">
+        <option value="placeholder" disabled selected>Select Pagamento</option>
+        <option value="Cartão de crédito">Cartão de crédito</option>
+        <option value="Dinheiro">Dinheiro</option>
+        <option value="Pix">Pix</option>
+        <option value="Boleto">Boleto</option>
+      </select>
+      <label for="parcelamentoSelect">Parcelamento:</label>
+      <select id="parcelamentoSelect">
+        <option value="placeholder" disabled selected>Select Parcelamento</option>
+        <option value="1">1x</option>
+        <option value="2">2x</option>
+        <option value="3">3x</option>
+        <option value="4">4x</option>
+        <option value="5">5x</option>
+        <option value="6">6x</option>
+        <option value="7">7x</option>
+        <option value="8">8x</option>
+        <option value="9">9x</option>
+        <option value="10">10x</option>
+        <option value="11">11x</option>
+        <option value="12">12x</option>
+      </select>
+      <label for="bandeiraSelect">Bandeira:</label>
+      <select id="bandeiraSelect">
+        <option value="placeholder" disabled selected>Select Bandeira</option>
+        <option value="bandeira1">Bandeira 1</option>
+        <option value="bandeira2">Bandeira 2</option>
+        <option value="bandeira3">Bandeira 3</option>
+      </select>
+      <label for="taxaInput">Taxa:</label>
+      <input type="number" step="0.01" id="taxaInput">
+      <label for="descontoInput">Desconto:</label>
+      <input type="number" step="0.01" id="descontoInput">
+      <label for="valorLiqInput">Valor Líquido:</label>
+      <input type="number" step="0.01" id="valorLiqInput">
+      <button onclick="closeModal()">Cancel</button>
+      <button onclick="saveEntry()">Save</button>
+    </div>
+  </div>
+  
+</body>
+</html>

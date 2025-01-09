@@ -1,0 +1,257 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 62.5%;
+    /*pafrão 16px --> 62,5% == 10PX*/
+}
+
+body {
+    background-color: white;
+    font-size: 1.6rem;
+    /*pafrão 16px --> 1.6rem == 16pX*/
+}
+
+.container {
+    display: flex;
+    background-color: white;
+    max-width: 100%;
+}
+
+.img_logo {
+    margin-top: 20px;
+    width: 40%;
+}
+
+.cadastro {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    max-width: 22%;
+    height: 590px;
+    margin: 20px 80px 0px 120px;
+    align-items: center;
+    border-radius: 30px;
+    box-shadow: 3px 3px 3px #e1e1e1, -3px 0 3px #e1e1e1;
+    border-top: 10px solid #ff914d;
+}
+
+
+.texto_sobre_form {
+    margin-top: 20px;
+    padding: 0;
+    font-family: Montserrat;
+    font-weight: 500;
+    font-size: 1.1rem;
+    text-align: center;
+
+}
+
+.texto_otimize {
+    width: 516px;
+    height: 178px;
+    margin-top: 40px;
+    font-family: 'Montserrat';
+}
+
+.titulo_otimize {
+    margin-top: 60px;
+}
+
+.texto {
+    margin: 20px 0 0 0px;
+    font-size: 1.4rem;
+    text-align: justify;
+    text-indent: 13px
+}
+
+.preencher_cadastro {
+    margin-top: 20px;
+}
+
+.forms {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.input_forms {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+}
+
+.input_forms input {
+    margin: 5px 0px 0 0px;
+    padding: 5px 5px;
+    border-radius: 4px;
+    border: 1px solid #e1e1e1;
+    font-size: 1.2rem;
+    font-family: 'Montserrat';
+}
+
+.input_forms .opcoes {
+    border: none;
+    font-size: 1.2rem;
+    font-family: 'Montserrat';
+    /* background-color: #ff914d;*/
+}
+
+.input_forms label {
+    padding: 1px 2px 1px 2px;
+    border-radius: 4px;
+    border-top: 1px solid #e1e1e1;
+    font-size: 1.1rem;
+    font-family: 'Montserrat';
+}
+
+
+.cont_planos,
+.cont_medicos,
+.cont_esp {
+    display: flex;
+    flex-direction: column;
+    padding: 5px 0 5px 0;
+    height: 30px;
+    border-radius: 5px;
+    border: 1px solid #e1e1e1;
+    font-size: 1.2rem;
+    font-family: 'Montserrat';
+    margin: 5px 0px 0 0px;
+    /* background-color: #f0eded;*/
+}
+
+.cont_medicos .lista,
+.cont_planos .lista,
+.cont_esp .lista {
+    margin: 0;
+    border: none;
+}
+
+.cont_medicos .input,
+.cont_planos .input,
+.cont_esp .input {
+    border: 0px solid #e1e1e1;
+}
+
+.input_forms select {
+    padding: 1px 1px;
+    border: none;
+    font-size: 1rem;
+    font-family: 'Montserrat';
+    width: 100%;
+    border-top: 0.5px solid#e1e1e1;
+    border-radius: 0 0 5px 5px;
+}
+
+.input_forms input:hover {
+    /*focus usado ao clicar*/
+    border-color: #ff914d;
+}
+
+.input_forms input:hover::placeholder {
+    color: #ff914d;
+}
+
+option:hover {
+    color: #ff914d;
+}
+
+.check_box {
+    display: flex;
+    padding: 5px 0 0 0px;
+}
+
+.check_box .input {
+    width: 80%;
+    margin: 0;
+}
+
+.input_forms .check_box .texto_check {
+    font-size: 1rem;
+    border: none;
+}
+
+.botao {
+    margin-top: 50px;
+}
+
+.botao button {
+    border: none;
+    background-color: #ef894e;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 100%;
+    padding: 10px 10px 10px 10px;
+    box-shadow: 0 -2px 1px#c0bfbf;
+}
+
+.botao button:hover {
+    background-color: #1e2759;
+}
+
+.botao button a {
+    color: white;
+    text-decoration: none;
+    font-family: 'Montserrat';
+    font-weight: 400;
+    font-size: 1.8rem;
+}
+
+/*-------------------Com interferencia do javascript------------------------------*/
+.modal {
+    position: absolute;
+    background-color: rgba(52, 52, 50, 0.749);
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    visibility: hidden;
+}
+
+.conteudo-modal img {
+    width: 10%;
+}
+
+.conteudo-modal {
+    justify-content: center;
+    background-color: white;
+    align-items: center;
+    height: 120px;
+    width: 460px;
+    border-radius: 10px;
+    border-top: 7px solid #ff914d;
+    gap: 15px;
+    font-family: 'Montserrat';
+    font-size: 1.4rem;
+}
+
+.informacoes-modal {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 20px 50px 40px 50px;
+    gap: 15px;
+}
+
+.fechar-modal {
+    /* Incluir no javascript*/
+    width: 100%;
+    color: black;
+    font-size: 1.3rem;
+    font-weight: bold;
+    text-align: right;
+    float: right;
+    cursor: pointer;
+    margin: 20px 30px 10px 0;
+    border: 0;
+}
+
+.modal.aberto {
+    /*incluir no javascript*/
+    opacity: 1;
+    visibility: visible;
+}

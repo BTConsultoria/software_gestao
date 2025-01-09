@@ -1,0 +1,133 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    font-size: 62.5%;
+    background-color: #0304068c;
+    /*pafrão 16px --> 62,5% == 10PX*/
+}
+
+body {
+    background-color: white;
+    font-size: 1.6rem;
+    /*pafrão 16px --> 1.6rem == 16pX*/
+}
+
+.container {
+    display: flex;
+    background-color: white;
+    max-width: 100%;
+}
+
+.img_logo {
+    margin-top: 20px;
+    width: 40%;
+    padding-top: 5%;
+}
+
+.cadastro {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    max-width: 60%;
+    margin: auto;
+    margin-top: -4%;
+    height: 50%;
+    align-items: center;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    border-radius: 30px;
+    box-shadow: 3px 3px 3px #e1e1e1, -3px 0 3px #e1e1e1;
+    border-top: 10px solid #ff914d;
+}
+
+
+.texto_sobre_form {
+    margin-top: 20px;
+    padding: 0;
+    font-family: Montserrat;
+    font-weight: 500;
+    font-size: 1.1rem;
+    text-align: center;
+
+}
+
+.preencher_cadastro {
+    margin-top: 20px;
+}
+
+.forms {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    align-items: center;
+}
+
+.input_forms {
+    display: flex;
+    width: 140%;
+    flex-direction: column;
+    padding-top: 10%;
+}
+
+.input_forms input {
+    margin: 5px 0px 0 0px;
+    padding: 5px 5px;
+    border-radius: 10px;
+    border: 1px solid #e1e1e1;
+    font-size: 1.2rem;
+    font-family: 'Montserrat';
+    height: 30px;
+}
+
+.botao {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+.botao button {
+    background-color: #ff914d;
+    color: white;
+    padding: 5px 15px;
+    border: none;
+    border-radius: 4px;
+    font-size: 1.2rem;
+    font-family: 'Montserrat';
+    cursor: pointer;
+    width: 100%;
+    height: 35px;
+}
+
+@media screen and (max-width: 768px) {
+
+    .container {
+        display: flex;
+        flex-direction: column;
+        background-color: white;
+        max-width: 100%;
+    }
+
+    .cadastro {
+        display: flex;
+        flex-direction: column;
+        background-color: white;
+        max-width: 90%;
+        margin: 0 auto;
+        margin-top: 20px;
+        height: auto;
+        border-radius: 30px;
+        box-shadow: 3px 3px 3px #e1e1e1, -3px 0 3px #e1e1e1;
+        border-top: 10px solid #ff914d;
+    }
+
+    .img_logo {
+        margin-top: 20px;
+        width: 50%;
+    }
+}

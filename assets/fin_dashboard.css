@@ -1,0 +1,133 @@
+body {
+    font-family: 'Montserrat';
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+  }
+
+  .container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 100%;
+    margin: auto;
+    padding: 20px;
+  }
+
+  .chart-row {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    width: 95%;
+  }
+
+  .chart-container {
+    border-radius: 16px;
+    box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    text-align: center;
+  }
+
+  .card-row {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    width: 95%;
+  }
+
+  .card-row2 {
+    display: flex;
+    justify-content: space-between; /* Items will be spaced evenly */
+    flex-wrap: wrap;
+  }
+
+  .card {
+    flex: 1 0 calc(30% - 20px); /* Adjust this value as needed to change the size of the charts */
+    margin: 1%;
+  }
+
+  .anualCard {
+    flex: 0 0 calc(20% - 20px); /* Adjust the width as needed */
+    background-color: #011740;
+    color:#ffffff;
+  }
+
+  .anualCard h2 {
+    padding-top: 5%;
+  }
+
+ 
+  .anualCard p, .anualCard h3 {
+    font-size: 28px;
+    padding-top: 15%
+  }
+
+  .ftCard {
+    flex: 1 0 calc(30% - 20px); /* Adjust this value as needed to change the size of the charts */
+    margin: 1% 2.5%;
+    border-radius: 30px;
+    box-shadow: 3px 3px 3px #e1e1e1, -3px 0 3px #e1e1e1;
+    border-top: 10px solid #011740;
+  }
+
+  .chart-container {
+    flex: 0 0 calc(30% - 20px); /* Adjust this value as needed to change the size of the charts */
+    margin: 1%;
+  }
+
+  .card {
+    border-radius: 16px;
+    box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    text-align: center;
+  }
+
+  .card h5, .ftCard h5 {
+    font-size: 20px;
+    margin-top: 0;
+    padding-bottom: 3%;
+  }
+
+  .card p{
+    font-size: 24px;
+    line-height: 1.5;
+  }
+
+  .ftCard p {
+    font-size: 26px;
+    line-height: 1.5;
+  }
+
+  .card h4, .ftCard h4 {
+    font-size: 22px;
+    margin-top: 20px;
+    padding-bottom: 3%;
+  }
+  
+
+  .mensal {
+    background-color: #fe904d;
+    color:#ffffff;
+    margin-right: 40px;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  .mensal h2 {
+    margin-bottom: 30px;
+  }
+
+  .plano {
+    background-color: #011740;
+    color:#ffffff;
+    margin-left:40px;
+    padding-left: 40px;
+    padding-right: 40px;
+  }
+
+  
+  canvas {
+    width: 48%; /* Make the canvas element fill its container */
+    height: auto; /* Allow the height to adjust proportionally */
+  }

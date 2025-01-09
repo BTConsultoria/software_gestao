@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid black;
+    padding: 8px;
+    text-align: left;
+}
+
+button {
+    margin: 10px 0;
+    padding: 10px 20px;
+}
+
+.modal, .modal2 {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.4);
+}
+
+.modal-content, .modal-content2 {
+    background-color: #fefefe;
+    margin: 15% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+    </style>
+</head>
+<body>
+
+<h2>Produtos</h2>
+
+<button id="cadastrar-button">Cadastrar Novo Produto</button>
+<button id="entrada-button">Entrada</button>
+<button id="saida-button">Saída</button>
+
+<!-- Cadastrar Novo Produto Modal -->
+<!-- Cadastrar Novo Produto Modal -->
+
+<!-- Edit Modal -->
+<div id="edit-modal" class="modal">
+    <div class="modal-content">
+        <span class="close-button">×</span>
+        <form id="edit-form">
+            <label>
+                Nome:
+                <input type="text" name="nome">
+            </label>
+            <label>
+                Lote:
+                <input type="text" name="lote">
+            </label>
+            <label>
+                Marca:
+                <input type="text" name="marca">
+            </label>
+            <label>
+                Quantidade:
+                <input type="number" name="quantidade">
+            </label>
+            <label>
+                Validade:
+                <input type="date" name="validade">
+            </label>
+            <label>
+                Estoque Mínimo:
+                <input type="number" name="estoque_minimo">
+            </label>
+            <label>
+                Unidade:
+                <input type="text" name="unidade">
+            </label>
+            <label>
+                Data de Entrada:
+                <input type="date" name="data_de_entrada">
+            </label>
+            <label>
+                Preço:
+                <input type="number" step="0.01" name="preco">
+            </label>
+            <button type="submit">Save Changes</button>
+        </form>
+    </div>
+</div>
+
+
+<div id="cadastrar-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close-button">×</span>
+        <form id="cadastrar-form">
+            <label>
+                Nome:
+                <input type="text" name="nome">
+            </label>
+            <label>
+                Lote:
+                <input type="text" name="lote">
+            </label>
+            <label>
+                Marca:
+                <input type="text" name="marca">
+            </label>
+            <label>
+                Quantidade:
+                <input type="number" name="quantidade">
+            </label>
+            <label>
+                Validade:
+                <input type="date" name="validade">
+            </label>
+            <label>
+                Estoque Mínimo:
+                <input type="number" name="estoque_minimo">
+            </label>
+            <label>
+                Unidade:
+                <input type="text" name="unidade">
+            </label>
+            <label>
+                Data de Entrada:
+                <input type="date" name="data_de_entrada">
+            </label>
+            <label>
+                Preço:
+                <input type="number" step="0.01" name="preco">
+            </label>
+            <button type="submit">Cadastrar</button>
+        </form>
+    </div>
+</div>
+
+
+<!-- Entrada Modal -->
+<div id="entrada-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close-button">×</span>
+        <form id="entrada-form">
+            <label>
+                Id:
+                <input type="text" name="id">
+            </label>
+            <label>
+                Quantidade:
+                <input type="number" name="quantidade">
+            </label>
+            <button type="submit">Entrada</button>
+        </form>
+    </div>
+</div>
+
+<!-- Saída Modal -->
+<div id="saida-modal" class="modal" style="display: none;">
+    <div class="modal-content">
+        <span class="close-button">×</span>
+        <form id="saida-form">
+            <label>
+                Id:
+                <input type="text" name="id">
+            </label>
+            <label>
+                Quantidade:
+                <input type="number" name="quantidade">
+            </label>
+            <button type="submit">Saída</button>
+        </form>
+    </div>
+</div>
+
+
+<table id="produtos-table">
+  <thead>
+    <tr>
+      <th>Id</th>
+      <th>Nome</th>
+      <th>Lote</th>
+      <th>Marca</th>
+      <th>Quantidade</th>
+      <th>Validade</th>
+      <th>Estoque Mínimo</th>
+      <!-- New columns -->
+      <th>Unidade</th> 
+      <th>Data de Entrada</th> 
+      <th>Preço</th>
+      <th>Edit</th>
+      <th>Delete</th>
+    </tr>
+  </thead>
+  <tbody></tbody>
+</table>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+<script>
+
+function closeModal() {
+    $('.modal').hide();
+}
+
+$('.close-button').click(closeModal);
+
+$('#cadastrar-button').click(function() {
+    closeModal();
+    $('#cadastrar-modal').show();
+});
+
+$('#entrada-button').click(function() {
+    closeModal();
+    $('#entrada-modal').show();
+});
+
+$('#saida-button').click(function() {
+    closeModal();
+    $('#saida-modal').show();
+});
+
+// Handle the form submission for each modal
+$('#cadastrar-form, #entrada-form, #saida-form').on('submit', function(event) {
+    event.preventDefault();
+
+    // Handle the form submission here
+
+    // Close the modal
+    $(this).closest('.modal').hide();
+});
+
+$.ajax({
+    url: '/api/produtos_table',
+    type: 'GET',
+    dataType: 'json',
+    success: function(data) {
+        $('#produtos-table tbody').empty();
+
+        for (var i = 0; i < data.length; i++) {
+            var produto = data[i];
+            var row = '<tr>' +
+                '<td>' + produto.id + '</td>' +
+                '<td>' + produto.nome + '</td>' +
+                '<td>' + produto.lote + '</td>' +
+                '<td>' + produto.marca + '</td>' +
+                '<td>' + produto.quantidade + '</td>' +
+                '<td>' + produto.validade + '</td>' +
+                '<td>' + produto.estoque_minimo + '</td>' +
+                '<td>' + produto.unidade + '</td>' +
+                '<td>' + produto.data_de_entrada + '</td>' +
+                '<td>' + produto.preco + '</td>' +
+                '<td><button class="edit-button" data-id="' + produto.id + '">Edit</button></td>' +
+                '<td><button class="delete-button" data-id="' + produto.id + '">Delete</button></td>' +
+            '</tr>';
+            $('#produtos-table tbody').append(row);
+        }
+    },
+    error: function(error) {
+        console.error('Error:', error);
+    }
+});
+
+$('#cadastrar-form').on('submit', function(event) {
+    event.preventDefault();
+
+    var nome = $(this).find('input[name="nome"]').val();
+    var lote = $(this).find('input[name="lote"]').val();
+    var marca = $(this).find('input[name="marca"]').val();
+    var quantidade = $(this).find('input[name="quantidade"]').val();
+    var validade = $(this).find('input[name="validade"]').val();
+    var estoque_minimo = $(this).find('input[name="estoque_minimo"]').val();
+    var unidade = $(this).find('input[name="unidade"]').val();
+    var data_de_entrada = $(this).find('input[name="data_de_entrada"]').val();
+    var preco = $(this).find('input[name="preco"]').val();
+
+    $.ajax({
+        url: '/api/produtos_table',
+        type: 'POST',
+        data: {
+            nome: nome,
+            lote: lote,
+            marca: marca,
+            quantidade: quantidade,
+            validade: validade,
+            estoque_minimo: estoque_minimo,
+            unidade: unidade,
+            data_de_entrada: data_de_entrada,
+            preco: preco
+        },
+        success: function(result) {
+    // Close the modal
+    closeModal();
+
+    // Fetch the updated data from the server and update the table
+    $.ajax({
+        url: '/api/produtos_table',
+        type: 'GET',
+        dataType: 'json',
+        success: function(data) {
+            $('#produtos-table tbody').empty();
+
+            for (var i = 0; i < data.length; i++) {
+                var produto = data[i];
+                var row = '<tr>' +
+                    '<td>' + produto.id + '</td>' +
+                    '<td>' + produto.nome + '</td>' +
+                    '<td>' + produto.lote + '</td>' +
+                    '<td>' + produto.marca + '</td>' +
+                    '<td>' + produto.quantidade + '</td>' +
+                    '<td>' + produto.validade + '</td>' +
+                    '<td>' + produto.estoque_minimo + '</td>' +
+                    '<td>' + produto.unidade + '</td>' +
+                    '<td>' + produto.data_de_entrada + '</td>' +
+                    '<td>' + produto.preco + '</td>' +
+                '</tr>';
+                $('#produtos-table tbody').append(row);
+            }
+        },
+        error: function(error) {
+            console.error('Error:', error);
+        }
+    });
+},
+        error: function(error) {
+           console.error('Error:', error);
+        }
+    });
+});
+
+$('#entrada-form').on('submit', function(event) {
+    event.preventDefault();
+
+    var id = $(this).find('input[name="id"]').val();
+    var quantidade = $(this).find('input[name="quantidade"]').val();
+
+    $.ajax({
+        url: '/api/produtos_table/entrada/' + id,
+        type: 'POST',
+        data: {
+            quantidade: quantidade
+        },
+        success: function(result) {
+           // Handle the success case here
+           closeModal();
+        },
+        error: function(error) {
+           console.error('Error:', error);
+        }
+    });
+});
+
+$('#saida-form').on('submit', function(event) {
+    event.preventDefault();
+
+    var id = $(this).find('input[name="id"]').val();
+    var quantidade = $(this).find('input[name="quantidade"]').val();
+
+    $.ajax({
+        url: '/api/produtos_table/saida/' + id,
+        type: 'POST',
+        data: {
+            quantidade: quantidade
+        },
+        success: function(result) {
+           // Handle the success case here
+           closeModal();
+        },
+        error: function(error) {
+           console.error('Error:', error);
+        }
+    });
+});
+
+
+window.onclick = function(event) {
+    if (event.target == document.getElementById('cadastrar-modal')) {
+        document.getElementById('cadastrar-modal').style.display = "none";
+    } else if (event.target == document.getElementById('entrada-modal')) {
+        document.getElementById('entrada-modal').style.display = "none";
+    } else if (event.target == document.getElementById('saida-modal')) {
+        document.getElementById('saida-modal').style.display = "none";
+    } else if (event.target == document.getElementById('edit-modal')) {
+        document.getElementById('edit-modal').style.display = "none";
+    }
+}
+
+
+$(document).on('click', '.edit-button', function() {
+    var id = $(this).data('id');
+    // Find the product's row in the table
+    var row = $(this).closest('tr');
+    // Get the current data from the row
+    var nome = row.find('td:eq(1)').text();
+    var lote = row.find('td:eq(2)').text();
+    var marca = row.find('td:eq(3)').text();
+    var quantidade = row.find('td:eq(4)').text();
+    var validade = row.find('td:eq(5)').text();
+// Extract just the date part (yyyy-mm-dd)
+    validade = validade.substring(0, 10);
+
+    var estoque_minimo = row.find('td:eq(6)').text();
+    var unidade = row.find('td:eq(7)').text();
+    var data_de_entrada = row.find('td:eq(8)').text();
+// Extract just the date part (yyyy-mm-dd)
+    data_de_entrada = data_de_entrada.substring(0, 10);
+
+    console.log("dataaaa");
+    console.log(data_de_entrada);
+
+    var preco = row.find('td:eq(9)').text();
+
+   // Display your edit form (this will depend on how your form is structured)
+   $('#edit-form input[name="nome"]').val(nome);
+   $('#edit-form input[name="lote"]').val(lote);
+   $('#edit-form input[name="marca"]').val(marca);
+   $('#edit-form input[name="quantidade"]').val(quantidade);
+   $('#edit-form input[name="validade"]').val(validade);
+   $('#edit-form input[name="estoque_minimo"]').val(estoque_minimo);
+   $('#edit-form input[name="unidade"]').val(unidade);
+   $('#edit-form input[name="data_de_entrada"]').val(data_de_entrada);
+   $('#edit-form input[name="preco"]').val(preco);
+
+   $('#edit-modal').show();
+   $('#edit-form').data('id', id); // Set the ID of the product being edited
+});
+
+
+$(document).on('click', '.delete-button', function() {
+    var id = $(this).data('id');
+    if (confirm('Você tem certeza que quer deletar esse produto?')) {
+        $.ajax({
+            url: '/api/produtos_table/' + id,
+            type: 'DELETE',
+            success: function(result) {
+                // Remove the product's row from the table
+                $('button[data-id="' + id + '"]').closest('tr').remove();
+            }
+        });
+    }
+});
+
+$('#edit-form').on('submit', function(event) {
+    event.preventDefault();
+
+    var id = $(this).data('id');
+    var nome = $(this).find('input[name="nome"]').val();
+    var lote = $(this).find('input[name="lote"]').val();
+    var marca = $(this).find('input[name="marca"]').val();
+    var quantidade = $(this).find('input[name="quantidade"]').val();
+    var validade = $(this).find('input[name="validade"]').val();
+    var estoque_minimo = $(this).find('input[name="estoque_minimo"]').val();
+    var unidade = $(this).find('input[name="unidade"]').val();
+    var data_de_entrada = $(this).find('input[name="data_de_entrada"]').val();
+    var preco = $(this).find('input[name="preco"]').val();
+
+    $.ajax({
+        url: '/api/produtos_table/' + id,
+        type: 'PUT',
+        data: {
+            nome: nome,
+            lote: lote,
+            marca: marca,
+            quantidade: quantidade,
+            validade: validade,
+            estoque_minimo: estoque_minimo,
+            unidade: unidade,
+            data_de_entrada: data_de_entrada,
+            preco: preco
+        },
+        success: function(result) {
+           // Handle the success case here
+           closeModal();
+        },
+        error: function(error) {
+           console.error('Error:', error);
+        }
+    });
+});
+
+
+
+
+</script>
+
+</body>
+</html>
+

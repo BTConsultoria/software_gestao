@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Pacientes Table</title>
+    <link rel="stylesheet" href="../assets/client_table.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+</head>
+
+<body>
+    <div style="align-items: left;">
+        <h1 style="color: black; margin-left: 8%; margin-bottom: 0px; margin-top: 50px;" align="left">Gestão de
+            Pacientes</h1>
+        <hr style="margin-left: 8%; width: 50%;">
+    </div>
+    <div class="table-container">
+        <div class="botoes">
+            <div class="botoes-tabelas">
+                <button id="pacientes-button" class="botoes-esq">Pacientes</button>
+                <button id="consultas-button" class="botoes-esq">Consultas</button>
+            </div>
+
+                <button id="cadastro-button" class="botoes-dir">Cadastros</button>
+        </div>
+        
+
+        <table id="consultas-table" style="display: none;">
+            <div style="display: flex; border-bottom: 2px solid black; padding: 0px; margin: 25px 42px">
+                <div style="align-items: left; width: 70%;">
+                    <h1 style="color: black;" align="left" id="output-text">Lista de pacientes</h1>
+                </div>
+            </div>
+            <thead>
+                <tr class="titulo">
+                    <th>Nome</th>
+                    <th>CPF</th>
+                    <th>Especialidade</th>
+                    <th>Médico</th>
+                    <th>Data</th>
+                    <th>Horário</th>
+                    <th>Editar</th>
+                    <th>Excluir</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <table id="pacientes-table">
+            <thead>
+                <tr class="titulo">
+                    <th>Nome</th>
+                    <th>Gênero</th>
+                    <th>Nome Social</th>
+                    <th>Data de Nascimento</th>
+                    <th>CPF</th>
+                    <th>CEP</th>
+                    <th>Cidade</th>
+                    <th>Bairro</th>
+                    <th>Endereço</th>
+                    <th>Complemento</th>
+                    <th>Email</th>
+                    <th>Telefone</th>
+                    <th>Telefone 2</th>
+                    <th>Editar</th>
+                    <th>Excluir</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+        <div id="edit-modal" class="modal">
+            <div class="modal-content">
+                <span class="close-button">×</span>
+                <form id="edit-form" class="formulario" style="display: none;">
+                    <label>
+                        Nome:
+                        <input type="text" name="nome">
+                    </label>
+                    <br><br>
+                    <label>
+                        Gênero:
+                        <input type="text" name="genero">
+                    </label>
+                    <br><br>
+                    <label>
+                        Nome Social:
+                        <input type="text" name="nome_social">
+                    </label>
+                    <br><br>
+                    <label>
+                        Data de Nascimento:
+                        <input type="date" name="data_de_nascimento">
+                    </label>
+                    <br><br>
+                    <label>
+                        CPF:
+                        <input type="text" name="cpf">
+                    </label>
+                    <br><br>
+                    <label>
+                        CEP:
+                        <input type="text" name="cep">
+                    </label>
+                    <br><br>
+                    <label>
+                        Cidade:
+                        <input type="text" name="cidade">
+                    </label>
+                    <br><br>
+                    <label>
+                        Bairro:
+                        <input type="text" name="bairro">
+                    </label>
+                    <br><br>
+                    <label>
+                        Endereço:
+                        <input type="text" name="endereco">
+                    </label>
+                    <br><br>
+                    <label>
+                        Complemento:
+                        <input type="text" name="complemento">
+                    </label>
+                    <br><br>
+                    <label>
+                        Email:
+                        <input type="email" name="email">
+                    </label>
+                    <br><br>
+                    <label>
+                        Telefone:
+                        <input type="tel" name="telefone">
+                    </label>
+                    <br><br>
+                    <label class="telefone2css">
+                        Telefone 2:
+                        <input type="tel" name="telefone2">
+                    </label>
+                    <br><br>
+
+                    <button class="edit-end" type="submit">Salvar mudanças</button>
+
+                </form>
+
+            </div>
+        </div>
+
+        <div id="edit-consultas-modal" class="modal2">
+            <div class="modal-content2">
+                <span class="close-button">×</span>
+                <form id="edit-consultas-form" class="formulario2" style="display: none;">
+                    <label>
+                        Nome:
+                        <input type="text" name="nome">
+                    </label>
+                    <br><br>
+                    <label>
+                        CPF:
+                        <input type="text" name="cpf">
+                    </label>
+                    <br><br>
+                    <label>
+                        Especialidade:
+                        <input type="text" name="especialidade">
+                    </label>
+                    <br><br>
+                    <label>
+                        Médico:
+                        <input type="text" name="medico">
+                    </label>
+                    <br><br>
+                    <label>
+                        Data:
+                        <input type="date" name="data">
+                    </label>
+                    <br><br>
+                    <label>
+                        Horário:
+                        <input type="time" name="horario">
+                    </label>
+                    <br><br>
+
+                    <button class="edit-end" type="submit">Salvar mudanças</button>
+
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+
+            $('#pacientes-button').addClass('active');
+
+            $.ajax({
+                url: '/api/client_table', // Update this line
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+                    for (var i = 0; i < data.length; i++) {
+                        var paciente = data[i];
+                        var row = '<tr>' +
+                            '<td>' + paciente.nome + '</td>' +
+                            '<td>' + paciente.genero + '</td>' +
+                            '<td>' + (paciente.nome_social || '') + '</td>' +
+                            '<td>' + paciente.data_de_nascimento + '</td>' +
+                            '<td>' + paciente.cpf + '</td>' +
+                            '<td>' + paciente.cep + '</td>' +
+                            '<td>' + paciente.cidade + '</td>' +
+                            '<td>' + paciente.bairro + '</td>' +
+                            '<td>' + paciente.endereco + '</td>' +
+                            '<td>' + (paciente.complemento || '') + '</td>' +
+                            '<td>' + paciente.email + '</td>' +
+                            '<td>' + paciente.telefone + '</td>' +
+                            '<td>' + (paciente.telefone2 || '') + '</td>' +
+                            '<td><button class="edit-button" data-cpf="' + paciente.cpf + '"><a class="delete"> <img src="../assets/edit-icon.png" width="15px"> </a></button></td>' +
+                            '<td><button class="delete-button" data-cpf="' + paciente.cpf + '"><a class="delete"> <img src="../assets/54324.png" width="15px"> </a></button></td>' +
+                            '</tr>';
+                        $('#pacientes-table tbody').append(row);
+                    }
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                }
+            });
+
+            $(document).on('click', '.edit-button', function () {
+                var cpf = $(this).data('cpf');
+                var row = $(this).closest('tr');
+                var nome = row.find('td:eq(0)').text();
+                var genero = row.find('td:eq(1)').text();
+                var nome_social = row.find('td:eq(2)').text();
+
+                var data_de_nascimento = row.find('td:eq(3)').text();
+
+                data_de_nascimento = data_de_nascimento.substring(0, 10);
+
+                var cep = row.find('td:eq(5)').text();
+                var cidade = row.find('td:eq(6)').text();
+                var bairro = row.find('td:eq(7)').text();
+                var endereco = row.find('td:eq(8)').text();
+                var complemento = row.find('td:eq(9)').text();
+                var email = row.find('td:eq(10)').text();
+                var telefone = row.find('td:eq(11)').text();
+                var telefone2 = row.find('td:eq(12)').text();
+
+                $('#edit-form input[name="nome"]').val(nome);
+                $('#edit-form input[name="genero"]').val(genero);
+                $('#edit-form input[name="nome_social"]').val(nome_social);
+
+                $('#edit-form input[name="data_de_nascimento"]').val(data_de_nascimento);
+
+                $('#edit-form input[name="cpf"]').val(cpf);
+                $('#edit-form input[name="cep"]').val(cep);
+                $('#edit-form input[name="cidade"]').val(cidade);
+                $('#edit-form input[name="bairro"]').val(bairro);
+                $('#edit-form input[name="endereco"]').val(endereco);
+                $('#edit-form input[name="complemento"]').val(complemento);
+                $('#edit-form input[name="email"]').val(email);
+                $('#edit-form input[name="telefone"]').val(telefone);
+                $('#edit-form input[name="telefone2"]').val(telefone2);
+
+                $('#edit-form').show();
+                $('#edit-modal').show();
+                $('#edit-form').data('cpf', cpf);
+            });
+
+
+            $(document).on('click', '.delete-button', function () {
+                var cpf = $(this).data('cpf');
+                if (confirm('Tem certeza que deseja deletar esses dados de paciente?')) {
+                    $.ajax({
+                        url: '/api/client_table/' + cpf,
+                        type: 'DELETE',
+                        success: function (result) {
+                            $('button[data-cpf="' + cpf + '"]').closest('tr').remove();
+                        }
+                    });
+                }
+            });
+
+            $(document).on('click', '.close-button', function () {
+                $('#edit-modal').hide();
+            });
+
+
+            window.onclick = function (event) {
+                console.log("hey");
+                if (event.target == document.getElementById('edit-modal')) {
+                    document.getElementById('edit-modal').style.display = "none";
+                } else if (event.target == document.getElementById('edit-consultas-modal')) {
+                    document.getElementById('edit-consultas-modal').style.display = "none";
+                }
+            }
+
+            $('#edit-form').on('submit', function (event) {
+                event.preventDefault();
+                var cpf = $(this).data('cpf');
+                var nome = $(this).find('input[name="nome"]').val();
+                var genero = $(this).find('input[name="genero"]').val();
+                var nome_social = $(this).find('input[name="nome_social"]').val();
+                var data_de_nascimento = $(this).find('input[name="data_de_nascimento"]').val();
+                var cep = $(this).find('input[name="cep"]').val();
+                var cidade = $(this).find('input[name="cidade"]').val();
+                var bairro = $(this).find('input[name="bairro"]').val();
+                var endereco = $(this).find('input[name="endereco"]').val();
+                var complemento = $(this).find('input[name="complemento"]').val();
+                var email = $(this).find('input[name="email"]').val();
+                var telefone = $(this).find('input[name="telefone"]').val();
+                var telefone2 = $(this).find('input[name="telefone2"]').val();
+
+                var data = {
+                    nome: nome,
+                    genero: genero,
+                    data_de_nascimento: data_de_nascimento,
+                    cep: cep,
+                    cidade: cidade,
+                    bairro: bairro,
+                    endereco: endereco,
+                    email: email,
+                    telefone: telefone,
+
+                };
+
+                if (nome_social) {
+                    data.nome_social = nome_social;
+                };
+                if (complemento) {
+                    data.complemento = complemento;
+                };
+                if (telefone2) {
+                    data.telefone2 = telefone2;
+                };
+
+                $.ajax({
+                    url: '/api/client_table/' + cpf,
+                    type: 'PUT',
+                    data: data,
+                    success: function (result) {
+                        // Update the paciente's row in the table
+                        var row = $('button[data-cpf="' + cpf + '"]').closest('tr');
+                        row.find('td:eq(0)').text(nome);
+                        row.find('td:eq(1)').text(genero);
+                        row.find('td:eq(2)').text(nome_social || '');
+                        row.find('td:eq(3)').text(data_de_nascimento);
+                        row.find('td:eq(5)').text(cep);
+                        row.find('td:eq(6)').text(cidade);
+                        row.find('td:eq(7)').text(bairro);
+                        row.find('td:eq(8)').text(endereco);
+                        row.find('td:eq(9)').text(complemento || '');
+                        row.find('td:eq(10)').text(email);
+                        row.find('td:eq(11)').text(telefone);
+                        row.find('td:eq(12)').text(telefone2 || '');
+
+                        // Hide the form
+                        $('#edit-modal').hide();
+                    }
+                });
+            });
+        });
+
+        $('#consultas-button').click(function () {
+            $('#pacientes-table').hide();
+            $('#consultas-table').show();
+            $('#consultas-button').addClass('active');
+            $('#pacientes-button').removeClass('active');
+
+            $.ajax({
+                url: '/api/consultas_table',
+                type: 'GET',
+                dataType: 'json',
+                success: function (data) {
+
+                    $('#consultas-table tbody').empty();
+
+                    for (var i = 0; i < data.length; i++) {
+                        var consulta = data[i];
+                        var row = '<tr>' +
+                            '<td>' + consulta.nome + '</td>' +
+                            '<td>' + consulta.cpf + '</td>' +
+                            '<td>' + consulta.especialidade + '</td>' +
+                            '<td>' + consulta.medico + '</td>' +
+                            '<td>' + consulta.data + '</td>' +
+                            '<td>' + consulta.horario + '</td>' +
+                            '<td><button class="edit-button2" data-id="' + consulta.id + '"><a class="delete"> <img src="../assets/edit-icon.png" width="15px"> </a></button></td>' +
+                            '<td><button class="delete-button2" data-id="' + consulta.id + '"><a class="delete"> <img src="../assets/54324.png" width="15px"> </a></button></td>' +
+                            '</tr>';
+                        $('#consultas-table tbody').append(row);
+                    }
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+
+        function changePacient_to_Agenda() {
+            var newText = "Informações das consultas dos pacientes";
+            document.getElementById("output-text").textContent = newText;
+        }
+        
+        function changeAgenda_to_Pacient() {
+            var newText = "Lista de pacientes";
+            document.getElementById("output-text").textContent = newText;
+        }
+
+        document.getElementById("consultas-button").addEventListener("click", changePacient_to_Agenda);
+        document.getElementById("pacientes-button").addEventListener("click", changeAgenda_to_Pacient);
+
+
+        $('#pacientes-button').click(function () {
+            $('#consultas-table').hide();
+            $('#pacientes-table').show();
+            $('#pacientes-button').addClass('active');
+            $('#consultas-button').removeClass('active');
+        });
+
+        $('#cadastro-button').click(function () {
+        window.location.href = 'client'; // Altere o link conforme necessário
+    });
+
+        $(document).on('click', '#consultas-table .edit-button2', function () {
+            var cpf = $(this).data('cpf');
+            var row = $(this).closest('tr');
+            var nome = row.find('td:eq(0)').text();
+            var cpf = row.find('td:eq(1)').text();
+            var especialidade = row.find('td:eq(2)').text();
+            var medico = row.find('td:eq(3)').text();
+            var data = row.find('td:eq(4)').text();
+            var id = $(this).data('id');
+
+            var data = row.find('td:eq(4)').text();
+
+            data = data.substring(0, 10);
+
+            var horario = row.find('td:eq(5)').text();
+
+            $('#edit-consultas-form input[name="nome"]').val(nome);
+            $('#edit-consultas-form input[name="cpf"]').val(cpf);
+            $('#edit-consultas-form input[name="especialidade"]').val(especialidade);
+            $('#edit-consultas-form input[name="medico"]').val(medico);
+            $('#edit-consultas-form input[name="data"]').val(data);
+            $('#edit-consultas-form input[name="horario"]').val(horario);
+            $('#edit-consultas-form').data('id', id);
+
+            $('#edit-consultas-form').show();
+            $('#edit-consultas-modal').show();
+            $('#edit-consultas-form').data('cpf', cpf);
+        });
+
+        $(document).on('click', '#consultas-table .delete-button2', function () {
+            var id = $(this).data('id');
+            if (confirm('Você tem certeza que quer deletar essa consulta?')) {
+                $.ajax({
+                    url: '/api/consultas_table/' + id,
+                    type: 'DELETE',
+                    success: function (result) {
+                        $('button[data-id="' + id + '"]').closest('tr').remove();
+                    }
+                });
+            }
+        });
+
+        $(document).on('click', '.close-button', function () {
+            $('#edit-consultas-modal').hide();
+        });
+
+
+        $('#edit-consultas-form').on('submit', function (event) {
+            event.preventDefault();
+            var cpf = $(this).data('cpf');
+            var nome = $(this).find('input[name="nome"]').val();
+            var especialidade = $(this).find('input[name="especialidade"]').val();
+            var medico = $(this).find('input[name="medico"]').val();
+            var data = $(this).find('input[name="data"]').val();
+            var horario = $(this).find('input[name="horario"]').val();
+            var id = $(this).data('id');
+
+            $.ajax({
+                url: '/api/consultas_table/' + id,
+                type: 'PUT',
+                data: {
+                    nome: nome,
+                    especialidade: especialidade,
+                    medico: medico,
+                    data: data,
+                    horario: horario
+                },
+                success: function (result) {
+                    var row = $('button[data-id="' + id + '"]').closest('tr');
+                    row.find('td:eq(0)').text(nome);
+                    row.find('td:eq(2)').text(especialidade);
+                    row.find('td:eq(3)').text(medico);
+                    row.find('td:eq(4)').text(data);
+                    row.find('td:eq(5)').text(horario);
+
+                    $('#edit-consultas-modal').hide();
+                }
+            });
+        });
+
+    </script>
+
+</body>
+
+</html>
