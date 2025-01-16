@@ -35,7 +35,7 @@ app.use(flash());
 const connection = mysql.createConnection({
   host: 'localhost',
   user: 'root', 
-  password: 'XXXXX', 
+  password: 'Teste123', 
   database: 'biotech'
 });
 
